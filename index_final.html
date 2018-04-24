@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <script src='http://d3js.org/d3.v3.min.js'></script>
+  <script src='http://dimplejs.org/dist/dimple.v2.0.0.min.js'></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <style>     
+      h1 {
+        text-align: center;
+      } 
+      #wrapper {
+           width: 2500px;
+           margin: 10 auto;
+           text-align:left;
+      }
+      #chartcontainer,#chartnotes {
+          border: 1px solid white;
+          float: left;          
+      }
+      
+
+    </style>
+    <script type='text/javascript'>
+      function draw(data) {
+      
+      /*
+        D3.js setup code
+      */
+          'use strict';
+          var margin = 75,
+              width = 700 - margin,
+              height = 600 - margin;
+          var svg = d3.select('#chartcontainer')
+            .append('svg')
+              .attr('width', width + margin)
+              .attr('height', height + margin)
+            .append('g')
+                .attr('class','chart');
+          //Notes for default chart
+          d3.select('#chartnotes')                                       
+              .text('不同的年龄组在不同舱位中的幸存率呈现较大差异')
+              .append('p')
+              .text('在三等舱中，年轻人，老人和儿童成活率都相当高，而中年人的成活率则很低')
+              .append('p')                         
+              .text('最低的成活率来自于三等舱的中年组，成活率较低');                   
+
+          // Default percentage chart on page load
+          var myChart = new dimple.chart(svg, data);          
+          var x= myChart.addCategoryAxis('x', ['Age_Group']);
+          x.addOrderRule(['Child', 'Youth', 'MiddleAge', 'Senior']);
+          var y= myChart.addMeasureAxis('y', 'Survived');          
+          var series = myChart.addSeries('Pclass',dimple.plot.bar);
+          var legend = myChart.addLegend(100,20, 800, 30, 'left');
+          x.title= '乘客年龄组';
+          y.title= '幸存者数量';
+          // Increase the font size of x and y axis
+          x.fontSize = 15;
+          y.fontSize = 15;
+          //Increase the size of the legend
+          legend.fontSize = 15;
+          myChart.draw(); 
+          
+          //Select the first button - default
+          d3.select('#btn_sex')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+          d3.select('#btn_embarked')            
+            .style('background', 'rgb(251, 201, 127)')
+            .style('color', 'black');
+          d3.select('#btn_default')            
+            .style('background', 'rgb(251, 201, 127)')
+            .style('color', 'black');
+          //clear the buttons selections (resets button color)
+          function clear(){
+            d3.select('#btn_sex')            
+            .style('background', 'rgb(251, 201, 127)')
+            .style('color', 'black');
+            d3.select('#btn_embarked')            
+            .style('background', 'rgb(251, 201, 127)')
+            .style('color', 'black');
+            d3.select('#btn_default')            
+            .style('background', 'rgb(251, 201, 127)')
+            .style('color', 'black');
+          };
+          //Button click events
+          var location = d3.select('#btn_embarked').on('click', function() {
+            clear();
+            var series1 = myChart.addSeries('Embarked', dimple.plot.bar)
+            legend.series = [series1]
+            myChart.draw(750)
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            //Selected button styling
+            d3.select('#btn_embarked')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+            d3.select('#chartnotes')                            
+              .text('从图中我们可以看出， 来自南安普顿的乘客成活数量最多')
+              .append('p')
+              .text('这可能是因为本船的始发港口即为南安普顿，所以该港口上传的乘客最多，具体的情况可以对数据集进行统计分析后再得出更深的结论');
+            });
+          var gender = d3.select('#btn_sex').on('click', function() {
+            clear();
+            var series2 = myChart.addSeries('Sex', dimple.plot.bar);
+            legend.series = [series2];
+            myChart.draw(750);
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            ////Selected button styling
+            d3.select('#btn_person')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+            d3.select('#chartnotes')                            
+              .text('可以看出，各个年龄段，女性的成活率都要高于男性，仅有在高龄组，男女成活数量基本持平')
+              .append('p')
+              .text('由此我们可以看出，在灾难降临的时候乘客和船员们都倾向于让女性享受更大的生存机会');
+
+            });
+           var reset = d3.select('#btn_default').on('click', function() {
+            clear();
+            var series3 = myChart.addSeries('Pclass', dimple.plot.bar);
+            legend.series = [series3];
+            myChart.draw(750);
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            ////Selected button styling
+            d3.select('#btn_default')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+             d3.select('#chartnotes')                                       
+              .text('不同的年龄组在不同舱位中的幸存率呈现较大差异')
+              .append('p')
+              .text('在三等舱中，年轻人，老人和儿童成活率都相当高，而中年人的成活率则很低')
+              .append('p')                         
+              .text('最低的成活率来自于三等舱的中年组，成活率仅为较低'); 
+            });
+       };
+      </script>
+  </head>  
+<body>
+  <script type='text/javascript'>
+  
+  d3.csv('Processed_Titantic.csv', draw);
+  </script>
+  
+    <div><h1>泰坦尼克号幸存者数据可视化</h1></div>
+    <div>
+        <h2>泰坦尼克号事件简介</h2>
+        <p class="lead"><a href="https://www.youtube.com/watch?v=b0L_2jKEbA4">泰坦尼克号</a>是当时世界上体积最庞大、内部设施最豪华的客运轮船，有“永不沉没”的美誉 。然而讽刺的是，在她的处女航中，泰坦尼克号便遭厄运——她从英国南安普敦出发，途经法国瑟堡-奥克特维尔以及爱尔兰昆士敦，驶向美国纽约，船上时间1912年4月14日23时40分左右，泰坦尼克号与一座冰山相撞，造成右舷船艏至船中部破裂，五座水密舱进水。次日凌晨2时20分左右，泰坦尼克船体断裂成两截后沉入大西洋底3700米处。2224名船员及乘客中，逾1500人丧生，其中仅333具罹难者遗体被寻回。泰坦尼克号沉没事故为和平时期死伤人数最惨重的海难之一，其残骸直至1985年才被再度发现，目前受到联合国教育、科学及文化组织的保护。</p>
+    </div>
+
+    <div id='buttons' class='cat_button' style='text-align:left;'>
+      <button id='btn_sex' class='gender'> 按性别分类</button>
+      <button id='btn_embarked' class='embarked' >按登船地分类</button>
+      <button id='btn_default' class='default' >按舱位等级分类</button>
+    </div>   
+    <div id="wrapper">   
+      <div id='chartcontainer'></div>
+      <div id='chartnotes'></div>
+    </div>
+
+</body>
+</html>
