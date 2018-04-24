@@ -50,3 +50,8 @@ https://github.com/ositowang/Titanic_DataVisualization/blob/master/Data_Preproce
 在图表的侧面添加了图表说明文件为读者阐释一些基本的数据情况。不同的交互选项，还为分类变量提供了不同的颜色类型。最后，利用框架调整了整体的
 网页布局，使其看起来更加读者友好。
 ！[image](https://github.com/ositowang/Titanic_DataVisualization/blob/master/Final_Design.PNG)
+
+5.4 根据反馈，进行了第四次修改
+本次修改主要添加了死亡人数的柱状图，并更新了横纵坐标轴的标签，以便读者理解左右两条柱状图的具体含义，并对可视化说明进行了更新，更加有效的
+传递了可视化的意图。
+！[image]（https://github.com/ositowang/Titanic_DataVisualization/blob/master/Updated_Design.PNG）
