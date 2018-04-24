@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+
+  <style>
+      
+      h2 {
+        text-align: center;
+        text-decoration: underline;
+      }      
+      div.cat_button {
+        position: fixed;
+        top: 100px;
+        right: 500px;
+      }
+      
+      button.gender {
+        background-color: rgb(251, 201, 127);
+        padding: 3px;
+        margin: 7px;
+        border-radius: 50%;
+      }
+      button.embarked {
+        background-color: rgb(251, 201, 127);
+        padding: 3px;
+        margin: 7px;
+        border-radius: 50%;
+      }
+      button.default {
+        background-color: rgb(251, 201, 127);
+        padding: 3px;
+        margin: 7px;
+        border-radius: 50%;
+      }
+    </style>
+
+    <script type="text/javascript">
+      function draw(data) {
+      /*
+        D3.js setup code
+      */
+          "use strict";
+          var margin = 75,
+              width = 900 - margin,
+              height = 700 - margin;
+          d3.select("body")
+            .append("h2")
+            .text("Titanic Passenger Survival Visualization")
+          var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin)
+              .attr("height", height + margin)
+            .append('g')
+                .attr('class','chart');
+          
+      /*
+        Dimple.js Chart construction code
+      */
+          var myChart = new dimple.chart(svg, data);          
+          var x= myChart.addCategoryAxis('x', ['Age_Group']);
+          x.addOrderRule(['Child', 'Youth', 'MiddleAge', 'Senior']);
+          var y= myChart.addMeasureAxis('y', 'Survived');          
+          var series = myChart.addSeries('Pclass',dimple.plot.bar);
+          var legend = myChart.addLegend(100,20, 800, 30, 'left');
+          x.title= 'Age Group of Passengers';
+          y.title= 'Percentage of Survived Passengers (Total 891)';
+          // Increase the font size of x and y axis
+          x.fontSize = 15
+          y.fontSize = 15
+          //Adjust the size of the bar plots
+          myChart.draw();
+          
+          //Add buttons
+          var button_data = ["Survival by Gender",  "Survival by Embarked","Reset to Default"]
+          
+          var buttons = d3.select("body")
+                        .append("div")
+                        .attr("class", "category_buttons")
+                        .selectAll("div")
+                        .data(button_data)
+                        .enter()
+                        .append("div")
+                        .append("id", function(d) {return d})
+                        .text(function(d) {                            
+                            return d;
+                        });
+          //clear the buttons
+          function clear(){
+            d3.select("#btn_person")
+            .transition()
+            .duration(500)
+            .style("background", "rgb(251, 201, 127)")
+            .style("color", "black");
+
+            d3.select("#btn_embarked")
+            .transition()
+            .duration(500)
+            .style("background", "rgb(251, 201, 127)")
+            .style("color", "black");
+          };
+          //Select the first button - default
+          d3.select("#btn_default")
+            .transition()
+            .duration(500)
+            .style("background", "lightBlue")
+            .style("color", "white");
+         
+          //Button click events
+          var location = d3.select("#btn_embarked").on("click", function() {
+            clear();
+            var series1 = myChart.addSeries('Embarked', dimple.plot.bar)
+            legend.series = [series1]
+            myChart.draw(750)
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            //Selected button styling
+            d3.select('#btn_embarked')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+            });
+          var gender = d3.select("#btn_sex").on("click", function() {
+            clear();
+            var series2 = myChart.addSeries('Sex', dimple.plot.bar);
+            legend.series = [series2];
+            myChart.draw(750);
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            ////Selected button styling
+            d3.select('#btn_sex')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+            });
+      
+            var gender = d3.select("#btn_default").on("click", function() {
+            clear();
+            var series3 = myChart.addSeries('Pclass', dimple.plot.bar);
+            legend.series = [series3];
+            myChart.draw(750);
+            d3.selectAll('rect')
+            .style('opacity', 1);
+            ////Selected button styling
+            d3.select('#btn_sex')            
+            .style('background', 'lightBlue')
+            .style('color', 'white');
+            });
+      };
+      </script>
+  </head>
+<body>
+  <script type="text/javascript">
+  /*
+    Use D3 (not dimple.js) to load the CSV file
+    and pass the contents of it to the draw function
+    */
+  d3.csv("Processed_Titantic.csv", draw);
+  </script>
+
+  <div id="buttons" class="cat_button" style="display: inline-flex; margin-right:50px;">
+      <button id="btn_sex" class="gender" style="color: black; border: 1.5px solid black; border-radius: 15px; width: 80px; height: 50px;  margin-top: 40px;">    Survival by Gender
+      </button>
+      <button id="btn_embarked" class="embarked" style="color: black; width: 80px; height: 50px; border: 1.5px solid black; border-radius: 15px; margin-left:5px ; margin-top: 40px; ">Survival by Location
+      </button>
+      <button id="btn_default" class="default" style="color: black; width: 80px; height: 50px; border: 1.5px solid black; border-radius: 15px; margin-left:5px ; margin-top: 40px; ">Reset to Default
+      </button>
+  </div>
+</body>
+</html>
