@@ -39,20 +39,21 @@
                 .attr('class','chart');
           //Notes for default chart
           d3.select('#chartnotes')                                       
-              .text('不同的年龄组在不同舱位中的幸存率呈现出差异')
+              .text('不同舱位的存活率存在差异')
               .append('p')
-              .text('头等舱中的儿童成活率相当高，有8人存活只有一人死亡，整体来看，头等舱的成活情况在各个年龄段都非常理想，存活人数都基本大于死亡人数')
+              .text('头等舱乘客存活人数大于死亡人数，二等舱死亡人数和存活人数基本持平，三等舱死亡人数远远大于存活人数')
               .append('p')                         
-              .text('最低的成活率来自于三等舱的中年组，仅有4人存活，34人死亡。这是否意味着头等舱乘客有更大的生还机会呢？');                   
+              .text('这是否意味着头等舱乘客有更大的生还机会呢？');                   
 
-          // Default percentage chart on page load
+          // Default chart on page load
           var myChart = new dimple.chart(svg, data);          
-          var x= myChart.addCategoryAxis('x', ['Age_Group',"Survived_Status"]);
-          x.addOrderRule(['Child', 'Youth', 'MiddleAge', 'Senior']);
-          var y= myChart.addMeasureAxis('y', 'Survived');          
-          var series = myChart.addSeries('Pclass',dimple.plot.bar);
+          var x= myChart.addCategoryAxis('x', ["Pclass"]);
+          x.addOrderRule(['Upper Class', 'Middle Class', 'Lower Class']);
+          var y= myChart.addPctAxis('y', 'PassengerId');          
+          var series = myChart.addSeries('Survived_Status',dimple.plot.bar);
+          series.aggregate = dimple.aggregateMethod.count;
           var legend = myChart.addLegend(100,20, 800, 30, 'left');
-          x.title= '乘客年龄组/存货情况（左柱为存活/右柱为死亡）';
+          x.title= '座舱等级';
           y.title= '幸存乘客/死亡乘客数量';
           // Increase the font size of x and y axis
           x.fontSize = 15;
@@ -73,6 +74,7 @@
             .style('color', 'black');
           //clear the buttons selections (resets button color)
           function clear(){
+            svg.selectAll('*').remove()
             d3.select('#btn_sex')            
             .style('background', 'rgb(251, 201, 127)')
             .style('color', 'black');
@@ -86,9 +88,20 @@
           //Button click events
           var location = d3.select('#btn_embarked').on('click', function() {
             clear();
-            var series1 = myChart.addSeries('Embarked', dimple.plot.bar)
-            legend.series = [series1]
-            myChart.draw(750)
+            var myChart2 = new dimple.chart(svg, data);
+            var x2 = myChart2.addCategoryAxis('x', ['Embarked']);
+            var y2 = myChart2.addPctAxis('y', 'PassengerId');          
+            var series2 = myChart2.addSeries('Survived_Status',dimple.plot.bar);
+            series2.aggregate = dimple.aggregateMethod.count;
+            var legend2 = myChart2.addLegend(100,20, 800, 30, 'left');
+            x2.title= '乘客登船地';
+            y2.title= '幸存乘客/死亡乘客数量';
+          // Increase the font size of x and y axis
+            x2.fontSize = 15;
+            y2.fontSize = 15;
+          //Increase the size of the legend
+            legend2.fontSize = 15;
+            myChart2.draw(750);
             d3.selectAll('rect')
             .style('opacity', 1);
             //Selected button styling
@@ -96,15 +109,27 @@
             .style('background', 'lightBlue')
             .style('color', 'white');
             d3.select('#chartnotes')                            
-              .text('从图中我们可以看出， 法国瑟堡的乘客生还状况最为理想，在各个年龄段各个仓位的存活人数都大于死亡人数')
+              .text('从图中我们可以看出， 法国瑟堡的乘客生还状况最为理想，生还人数大于死亡人数')
               .append('p')
-              .text('这可能是因为本船的始发港口即为南安普顿，所以该港口上传的乘客最多，但是死亡人数也相对较多，基本上处于1:1的状态。');
+              .text('昆士兰的生还情况最为惨烈，死亡人数是生还人数的两倍以上，这其中是否会有登船地乘客的特性导致了生还率更高呢？');
             });
           var gender = d3.select('#btn_sex').on('click', function() {
             clear();
-            var series2 = myChart.addSeries('Sex', dimple.plot.bar);
-            legend.series = [series2];
-            myChart.draw(750);
+            var myChart3 = new dimple.chart(svg, data);
+            var x3 = myChart3.addCategoryAxis('x', 'Sex');
+            x.addOrderRule(['Male', 'Female']);
+            var y3 = myChart3.addPctAxis('y', 'PassengerId');          
+            var series3 = myChart3.addSeries('Survived_Status',dimple.plot.bar);
+            series3.aggregate = dimple.aggregateMethod.count;
+            var legend3 = myChart3.addLegend(100,20, 800, 30, 'left');
+            x3.title= '乘客性别';
+            y3.title= '幸存乘客/死亡乘客数量';
+          // Increase the font size of x and y axis
+            x3.fontSize = 15;
+            y3.fontSize = 15;
+          //Increase the size of the legend
+            legend3.fontSize = 15;
+            myChart3.draw(750);  
             d3.selectAll('rect')
             .style('opacity', 1);
             ////Selected button styling
@@ -112,28 +137,38 @@
             .style('background', 'lightBlue')
             .style('color', 'white');
             d3.select('#chartnotes')                            
-              .text('可以看出，各个年龄段，各个仓位，女性的成活率都要高于男性。')
+              .text('可以看出，女性的成活率要高于男性。')
               .append('p')
               .text('由此我们可以看出，在灾难降临的时候乘客和船员们都倾向于让女性享受更大的生存机会');
 
             });
            var reset = d3.select('#btn_default').on('click', function() {
             clear();
-            var series3 = myChart.addSeries('Pclass', dimple.plot.bar);
-            legend.series = [series3];
-            myChart.draw(750);
-            d3.selectAll('rect')
-            .style('opacity', 1);
+            var myChart4 = new dimple.chart(svg, data);          
+            var x4= myChart4.addCategoryAxis('x', ["Pclass"]);
+            x4.addOrderRule(['Upper Class', 'Middle Class', 'Lower Class']);
+            var y4= myChart4.addPctAxis('y', 'PassengerId');          
+            var series4 = myChart4.addSeries('Survived_Status',dimple.plot.bar);
+            series4.aggregate = dimple.aggregateMethod.count;
+            var legend4 = myChart4.addLegend(100,20, 800, 30, 'left');
+            x4.title= '乘客座舱等级';
+            y4.title= '幸存乘客/死亡乘客数量';
+          // Increase the font size of x and y axis
+            x4.fontSize = 15;
+            y4.fontSize = 15;
+          //Increase the size of the legend
+            legend4.fontSize = 15;
+            myChart4.draw(); 
             ////Selected button styling
             d3.select('#btn_default')            
             .style('background', 'lightBlue')
             .style('color', 'white');
              d3.select('#chartnotes')                                       
-              .text('不同的年龄组在不同舱位中的幸存率呈现较大差异')
+              .text('不同舱位的存活率存在差异')
               .append('p')
-              .text('头等舱中的儿童成活率相当高，有8人存活只有一人死亡，整体来看，头等舱的成活情况在各个年龄段都非常理想，存活人数都基本大于死亡人数')
+              .text('头等舱乘客存活人数大于死亡人数，二等舱死亡人数和存活人数基本持平，三等舱死亡人数远远大于存活人数')
               .append('p')                         
-              .text('最低的成活率来自于三等舱的中年组，仅有4人存活，34人死亡。这是否意味着头等舱乘客有更大的生还机会呢？'); 
+              .text('这是否意味着头等舱乘客有更大的生还机会呢？');  
             });
        };
       </script>
