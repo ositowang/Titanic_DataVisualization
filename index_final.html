@@ -49,7 +49,7 @@
           var myChart = new dimple.chart(svg, data);          
           var x= myChart.addCategoryAxis('x', ["Pclass"]);
           x.addOrderRule(['Upper Class', 'Middle Class', 'Lower Class']);
-          var y= myChart.addPctAxis('y', 'PassengerId');          
+          var y= myChart.addMeasureAxis('y', 'PassengerId');          
           var series = myChart.addSeries('Survived_Status',dimple.plot.bar);
           series.aggregate = dimple.aggregateMethod.count;
           var legend = myChart.addLegend(100,20, 800, 30, 'left');
@@ -90,7 +90,7 @@
             clear();
             var myChart2 = new dimple.chart(svg, data);
             var x2 = myChart2.addCategoryAxis('x', ['Embarked']);
-            var y2 = myChart2.addPctAxis('y', 'PassengerId');          
+            var y2 = myChart2.addMeasureAxis('y', 'PassengerId');          
             var series2 = myChart2.addSeries('Survived_Status',dimple.plot.bar);
             series2.aggregate = dimple.aggregateMethod.count;
             var legend2 = myChart2.addLegend(100,20, 800, 30, 'left');
@@ -118,7 +118,7 @@
             var myChart3 = new dimple.chart(svg, data);
             var x3 = myChart3.addCategoryAxis('x', 'Sex');
             x.addOrderRule(['Male', 'Female']);
-            var y3 = myChart3.addPctAxis('y', 'PassengerId');          
+            var y3 = myChart3.addMeasureAxis('y', 'PassengerId');          
             var series3 = myChart3.addSeries('Survived_Status',dimple.plot.bar);
             series3.aggregate = dimple.aggregateMethod.count;
             var legend3 = myChart3.addLegend(100,20, 800, 30, 'left');
@@ -147,7 +147,7 @@
             var myChart4 = new dimple.chart(svg, data);          
             var x4= myChart4.addCategoryAxis('x', ["Pclass"]);
             x4.addOrderRule(['Upper Class', 'Middle Class', 'Lower Class']);
-            var y4= myChart4.addPctAxis('y', 'PassengerId');          
+            var y4= myChart4.addMeasureAxis('y', 'PassengerId');          
             var series4 = myChart4.addSeries('Survived_Status',dimple.plot.bar);
             series4.aggregate = dimple.aggregateMethod.count;
             var legend4 = myChart4.addLegend(100,20, 800, 30, 'left');
