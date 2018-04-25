@@ -55,3 +55,7 @@ https://github.com/ositowang/Titanic_DataVisualization/blob/master/Data_Preproce
 本次修改主要添加了死亡人数的柱状图，并更新了横纵坐标轴的标签，以便读者理解左右两条柱状图的具体含义，并对可视化说明进行了更新，更加有效的
 传递了可视化的意图。
 ！[image](https://github.com/ositowang/Titanic_DataVisualization/blob/master/Updated_Design.PNG)
+
+5.5 根据反馈，进行了第五次修改
+本次修改集中在修改生存死亡人人数的计数，改正了计数的错误，并将结果以百分比的形式呈现出来，以更好的呈现部分到整体之间的关系。
+此外还删除了无关的年龄组变量，力求凸显X轴分类变量所展现的数据特点
